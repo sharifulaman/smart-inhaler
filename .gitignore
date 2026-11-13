@@ -1,0 +1,19 @@
+__pycache__/
+*.pyc
+.venv/
+runs/
+data/recordings/*.csv
+data/recordings/*.mp4
+data/features/
+evaluation/results/
+models/*.pt
+models/*.joblib
+.pytest_cache/
+data/scans/
+
+# model downloads / weights (ultralytics + CLIP drop these in the project root)
+*.pt
+weights/
+# generated or personal data (rebuild with training/make_synthetic.py)
+data/synthetic_inhaler/
+data/backgrounds/

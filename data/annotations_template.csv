@@ -1,0 +1,5 @@
+person_id,video_path,label,error_type,angle,lighting,distance,start_frame,end_frame
+P01,data/recordings/P01_correct_front_bright_near.mp4,correct,none,front,bright,near,0,
+P01,data/recordings/P01_wrongmouth_front_bright_near.mp4,wrong_mouth,mouth_too_far,front,bright,near,0,
+P01,data/recordings/P01_wronginhaler_front_bright_near.mp4,wrong_inhaler,inhaler_tilted,front,bright,near,0,
+P02,data/recordings/P02_correct_left30_dim_far.mp4,correct,none,left30,dim,far,15,420

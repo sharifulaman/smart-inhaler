@@ -1,0 +1,93 @@
+# Smart Inhaler CV - central configuration.
+# Paths are resolved relative to the project root unless absolute.
+
+camera:
+  source: 0                 # webcam index, RTSP/phone-stream URL, or a video file path
+  width: 1280
+  height: 720
+  fps: 30
+  reconnect_attempts: 10
+  reconnect_delay_s: 1.0
+  stale_frame_timeout_s: 2.0
+
+detector:
+  weights: models/best.pt   # YOLO11 detect or OBB model with classes inhaler / spacer
+  imgsz: 640
+  conf: 0.35
+  iou: 0.5
+  device: null              # null = auto, or "cpu", "0", "mps"
+  half: false
+  tracker: bytetrack.yaml
+  hold_frames: 8            # keep last box this many frames when a detection drops out
+  inhaler_classes: [inhaler]
+  spacer_classes: [spacer]
+  prefer_spacer: true       # when a spacer is visible, its far end is the mouthpiece
+  # Used only when models/best.pt is missing: open-vocabulary YOLO-World finds the inhaler
+  # from text prompts (no training data). Less accurate than a trained model; boxes only.
+  zero_shot:
+    enabled: true
+    model: yolov8s-worldv2.pt
+    prompts: [inhaler, asthma inhaler, blue plastic inhaler]
+    conf: 0.05
+
+# MediaPipe Tasks model bundles (run `python scripts/download_models.py` once)
+mediapipe:
+  face_model: models/mediapipe/face_landmarker.task
+  hand_model: models/mediapipe/hand_landmarker.task
+  pose_model: models/mediapipe/pose_landmarker_lite.task
+
+face:
+  max_faces: 1
+  min_detection_conf: 0.5
+  min_presence_conf: 0.5
+  min_tracking_conf: 0.5
+  min_face_px: 60           # eye-to-eye distance below this lowers face visibility
+
+hands:
+  max_hands: 2
+  min_detection_conf: 0.5
+  min_presence_conf: 0.5
+  min_tracking_conf: 0.5
+  hold_dist_frac: 0.75      # hand must be within this fraction of the inhaler box diagonal
+
+pose:
+  enabled: true
+  every_n_frames: 3         # pose is cached between runs to save time
+  min_detection_conf: 0.5
+  min_presence_conf: 0.5
+  min_tracking_conf: 0.5
+
+pipeline:
+  enhance_dark: true        # gamma-lift dark frames for the MediaPipe models
+  dark_mean_threshold: 70
+
+features:
+  smoothing:                # One-Euro filter
+    min_cutoff: 1.0
+    beta: 0.05
+    d_cutoff: 1.0
+  valid_thresholds:         # a landmark group counts as "valid" above these
+    face_vis: 0.5
+    mouth_vis: 0.5
+    hand_vis: 0.5
+  window_size: 20           # frames per classification window
+  window_stride_train: 5
+  min_valid_fraction:       # visibility gate -> "Unable to Determine"
+    inhaler: 0.6
+    face: 0.8
+    mouth: 0.8
+
+classifier:
+  model_path: models/technique_clf.joblib
+  uncertain_threshold: 0.55
+  stabiliser_frames: 5      # consecutive agreeing windows before the displayed label changes
+  rule_based_fallback: true # used only when no trained model exists (demo / bring-up)
+
+# PLACEHOLDER thresholds for the rule-based fallback. They are NOT clinically
+# validated. Replace them with the clinician-reviewed checklist values
+# (see docs/TECHNIQUE_CHECKLIST.md) or train the ML classifier instead.
+rule_thresholds:
+  max_mouthpiece_distance: 0.8   # face-widths (inter-eye distance units)
+  expected_angle_deg: 0.0        # inhaler axis angle relative to head roll
+  angle_tolerance_deg: 45.0
+  min_mouth_open_ratio: 0.05

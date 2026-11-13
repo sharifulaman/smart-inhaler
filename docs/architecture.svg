@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 520" font-family="Helvetica, Arial, sans-serif" font-size="13">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#555"/>
+    </marker>
+    <style>
+      .box{fill:#fff;stroke:#3b6ea5;stroke-width:1.5;rx:8}
+      .ml{fill:#eef5fc}
+      .out{fill:#eef8ee;stroke:#3f8f4f}
+      .gate{fill:#fff6e6;stroke:#d08a00}
+      .t{fill:#1c1c1c}.s{fill:#555;font-size:11px}.h{font-weight:700;font-size:14px}
+      .l{stroke:#555;stroke-width:1.5;fill:none;marker-end:url(#a)}
+    </style>
+  </defs>
+  <text x="20" y="28" class="h" font-size="17">Smart Inhaler CV - real-time pipeline</text>
+
+  <rect class="box" x="20" y="200" width="150" height="70"/>
+  <text x="95" y="228" text-anchor="middle" class="t h">Camera</text>
+  <text x="95" y="246" text-anchor="middle" class="s">OpenCV, threaded</text>
+  <text x="95" y="260" text-anchor="middle" class="s">reconnect, drop-old-frames</text>
+
+  <rect class="box ml" x="250" y="60" width="210" height="80"/>
+  <text x="355" y="88" text-anchor="middle" class="t h">Inhaler / spacer</text>
+  <text x="355" y="106" text-anchor="middle" class="s">YOLO11 (OBB) + ByteTrack</text>
+  <text x="355" y="122" text-anchor="middle" class="s">boxes, conf, track id, hold N frames</text>
+
+  <rect class="box ml" x="250" y="180" width="210" height="80"/>
+  <text x="355" y="208" text-anchor="middle" class="t h">Face and mouth</text>
+  <text x="355" y="226" text-anchor="middle" class="s">MediaPipe Face Landmarker</text>
+  <text x="355" y="242" text-anchor="middle" class="s">lips, corners, head pose, reliability</text>
+
+  <rect class="box ml" x="250" y="300" width="210" height="80"/>
+  <text x="355" y="328" text-anchor="middle" class="t h">Hands and pose</text>
+  <text x="355" y="346" text-anchor="middle" class="s">MediaPipe Hand + Pose Landmarker</text>
+  <text x="355" y="362" text-anchor="middle" class="s">holding hand, shoulders, posture</text>
+
+  <rect class="box" x="540" y="170" width="190" height="100"/>
+  <text x="635" y="198" text-anchor="middle" class="t h">Feature extractor</text>
+  <text x="635" y="216" text-anchor="middle" class="s">mouthpiece-mouth distance</text>
+  <text x="635" y="230" text-anchor="middle" class="s">inhaler own-axis angle, hand pos</text>
+  <text x="635" y="244" text-anchor="middle" class="s">head angles, visibility</text>
+  <text x="635" y="258" text-anchor="middle" class="s">normalised + One-Euro smoothed</text>
+
+  <rect class="box" x="540" y="300" width="190" height="60"/>
+  <text x="635" y="326" text-anchor="middle" class="t h">Sliding window</text>
+  <text x="635" y="344" text-anchor="middle" class="s">N frames: mean/std/min/max/slope</text>
+
+  <rect class="box gate" x="780" y="170" width="170" height="70"/>
+  <text x="865" y="196" text-anchor="middle" class="t h">Visibility gate</text>
+  <text x="865" y="214" text-anchor="middle" class="s">unreliable? -> Unable to</text>
+  <text x="865" y="228" text-anchor="middle" class="s">Determine</text>
+
+  <rect class="box ml" x="780" y="290" width="170" height="70"/>
+  <text x="865" y="316" text-anchor="middle" class="t h">Classifier</text>
+  <text x="865" y="334" text-anchor="middle" class="s">XGBoost / RF / SVM / MLP</text>
+  <text x="865" y="348" text-anchor="middle" class="s">probs + confidence threshold</text>
+
+  <rect class="box out" x="540" y="430" width="410" height="60"/>
+  <text x="745" y="456" text-anchor="middle" class="t h">Overlay UI and feedback</text>
+  <text x="745" y="474" text-anchor="middle" class="s">boxes, landmarks, status, distance, angle, visibility, class + confidence, warnings</text>
+
+  <path class="l" d="M170 235 L250 100"/>
+  <path class="l" d="M170 235 L250 220"/>
+  <path class="l" d="M170 235 L250 340"/>
+  <path class="l" d="M460 100 L540 195"/>
+  <path class="l" d="M460 220 L540 220"/>
+  <path class="l" d="M460 340 L540 245"/>
+  <path class="l" d="M635 270 L635 300"/>
+  <path class="l" d="M730 330 L755 330 L755 205 L780 205"/>
+  <path class="l" d="M865 240 L865 290" />
+  <path class="l" d="M865 360 L865 395 L745 395 L745 430"/>
+  <text x="20" y="500" class="s">Research prototype: RGB camera sees visible positioning only; it cannot confirm airflow, dose delivery or inhalation quality.</text>
+</svg>

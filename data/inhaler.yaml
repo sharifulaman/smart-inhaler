@@ -1,0 +1,9 @@
+# YOLO dataset config. Edit `path` to point at your Roboflow export (+ your own webcam frames).
+# For an OBB model use the OBB export of the same data and train with yolo11*-obb.pt.
+path: data/roboflow          # dataset root
+train: train/images
+val: valid/images
+test: test/images
+names:
+  0: inhaler
+  1: spacer

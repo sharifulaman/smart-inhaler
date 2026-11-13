@@ -1,0 +1,6 @@
+# Synthetic bootstrap dataset built from data/reference_inhalers/ by training/make_synthetic.py
+path: data/synthetic_inhaler
+train: images/train
+val: images/val
+names:
+  0: inhaler
